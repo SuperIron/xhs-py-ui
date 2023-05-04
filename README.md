@@ -1,6 +1,6 @@
 ## xhs-py-ui
 
-基于小红书爬虫框架 XHS 的 Gradio UI 版本。
+基于小红书爬虫框架 XHS 的批量的、便捷的 Gradio UI 版本。
 
 ## 效果预览
 

@@ -5,6 +5,7 @@ import pandas as pd
 import time
 import os
 
+
 # 45 个为一轮，每轮间隔默认 3 分钟
 ROUND_COUNT = 45
 
@@ -18,6 +19,7 @@ def xhs_to_excel(cookie, keyword, max_count, handle_delay=2, round_delay=180):
     while True:
         data = xhs_client.get_note_by_keyword(keyword, page=page)
         has_more = data.get('has_more')
+        print("has_more: %s" % has_more)
         if (not has_more) or len(notes) >= max_count:
             break
         for item in data.get('items'):
@@ -29,15 +31,18 @@ def xhs_to_excel(cookie, keyword, max_count, handle_delay=2, round_delay=180):
             interact_info = note_info.get('interact_info')
             timestamp = note_info.get('time')
             notes.append({
-                'id': id,
+                'url': 'https://www.xiaohongshu.com/explore/' + id,
                 'display_title': display_title,
                 'desc': desc,
                 'collected_count': interact_info.get('collected_count'),
                 "liked_count": interact_info.get("liked_count"),
                 'time': time.strftime('%Y-%m-%d', time.localtime(timestamp / 1000))
             })
-            print("notes: %s/%s" % (len(notes), int(max_count)))
+            cur_time = time.strftime(
+                '%H:%M:%S', time.localtime(time.time()))
+            print("notes: %s/%s [%s]" % (len(notes), int(max_count), cur_time))
             if len(notes) % ROUND_COUNT == 0:
+                print("round_delay: %s" % round_delay)
                 sleep(round_delay)
             else:
                 sleep(handle_delay)
